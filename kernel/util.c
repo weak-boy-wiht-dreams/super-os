@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include"../drivers/keyboard.h"
+#include"../drivers/display.h"
 //辅助内核编写的功能函数，一个函数，一个功能
 void memory_copy(uint8_t *source, uint8_t *dest, uint32_t nbytes) {
     int i;
@@ -63,3 +65,71 @@ int compare_string(char s1[], char s2[]) {
     }
     return s1[i] - s2[i];
 }
+
+int string_to_int(const char *str) {
+    int result = 0;
+    int sign = 1; // 默认是正数
+
+    // 检查负号
+    if (*str == '-') {
+        sign = -1;
+        str++;
+    }
+
+    // 逐字符解析数字
+    while (*str != '\0') {
+        if (*str >= '0' && *str <= '9') {
+            result = result * 10 + (*str - '0');
+        } else {
+            break; // 遇到非数字字符则停止
+        }
+        str++;
+    }
+
+    return result * sign;
+}
+
+void string_copy(char *dest, const char *src) {
+    while (*src) {
+        *dest++ = *src++;
+    }
+    *dest = '\0';
+}
+
+void get_user_input(char *buffer) {
+    int i = 0;
+    while (1) {
+        char key = get_key(); // 从键盘获取一个字符
+        if (key == '\n') {   // 检测回车
+            buffer[i] = '\0';
+            break;
+        } else if (key == '\b') { // 检测退格
+            if (i > 0) {
+                i--;
+                print_backspace();
+            }
+        } else {
+            buffer[i++] = key;
+            char str[2] = {key, '\0'};
+            print_string(str); // 在屏幕上打印用户输入
+        }
+    }
+    print_string("\n ");
+}
+/*
+
+void test_input() {
+    char key;
+
+    
+        key = get_key(); // 获取按键
+
+        if (key != '\0') { // 忽略无效按键
+            char str[2] = {key, '\0'};
+            print_string("You pressed: ");
+            print_string(str);
+            print_string("\n");
+        
+    }
+}
+*/

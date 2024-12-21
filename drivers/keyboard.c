@@ -5,7 +5,7 @@
 #include "../kernel/util.h"
 #include <stdint.h>
 #include <stdbool.h>
-
+#include "../kernel/kernel.h"
 
 //退格键扫描码
 #define BACKSPACE 0x0E
@@ -51,3 +51,16 @@ static void keyboard_callback(registers_t *regs) {
 void init_keyboard() {
     register_interrupt_handler(IRQ1, keyboard_callback);
 }
+
+//获得字符
+char get_key() {
+    // 从键盘端口读取扫描码
+    uint8_t scancode = port_byte_in(0x60);
+
+    // 转换扫描码为 ASCII 字符
+    char letter = sc_ascii[(int) scancode];
+
+    // 返回对应的字符
+    return letter;
+}
+

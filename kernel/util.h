@@ -14,4 +14,10 @@ void reverse(char s[]);
 void int_to_string(int n, char str[]);
 void append(char s[], char n);
 bool backspace(char s[]);
-int compare_string(char s1[], char s2[]);
+//int compare_string(char s1[], char s2[]);
+int compare_string(const char s1[], const char s2[]);
+
+int string_to_int(const char *str);
+void string_copy(char *dest, const char *src);
+void get_user_input(char *buffer);
+void test_input();
