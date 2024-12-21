@@ -10,7 +10,7 @@ void set_idt_gate(int n, uint32_t handler) {
     idt[n].low_offset = low_16(handler); // 设置处理程序的低 16 位地址
     idt[n].sel = KERNEL_CS;              // 设置内核代码段选择子
     idt[n].always0 = 0;                  // 始终为 0，用于填充
-    idt[n].flags = 0x8E;                 // 设置标志位：P=1（存在），DPL=00（内核级），类型位表瑟提——示中断门
+    idt[n].flags = 0x8E;                 // 设置标志位：P=1（存在），DPL=00（内核级），类型位表示中断门
     idt[n].high_offset = high_16(handler); // 设置处理程序的高 16 位地址
 }
 

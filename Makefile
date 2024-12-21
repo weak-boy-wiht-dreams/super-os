@@ -49,4 +49,3 @@ clean:
 	$(RM) boot/*.o boot/*.bin
 	$(RM) drivers/*.o
 	$(RM) cpu/*.o
-你们愿意去拓展宣传
