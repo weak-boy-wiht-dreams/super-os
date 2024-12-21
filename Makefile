@@ -62,3 +62,4 @@ clean:
 	$(RM) drivers/*.o
 	$(RM) cpu/*.o
 	$(RM) fs/*.o
+	$(RM) my_disk.img
