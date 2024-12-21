@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "../kernel/util.h"
 
+
 void set_cursor(int offset) {
     offset /= 2;
     port_byte_out(REG_SCREEN_CTRL, 14);
@@ -36,6 +37,7 @@ void set_char_at_video_memory(char character, int offset) {
     vidmem[offset] = character;
     vidmem[offset + 1] = WHITE_ON_BLACK;
 }
+
 // 滚动屏幕
 int scroll_ln(int offset) {
     memory_copy(

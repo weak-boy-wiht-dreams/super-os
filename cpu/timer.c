@@ -3,6 +3,7 @@
 #include "../drivers/ports.h"
 #include "../kernel/util.h"
 #include "isr.h"
+
 //tick 是一个全局变量，用于记录定时器的“滴答次数”，即中断发生的次数
 uint32_t tick = 0;
 /*每当定时器中断（PIT）发生时，timer_callback 函数会被调用，增加 tick 计数并输出当前的滴答次数。

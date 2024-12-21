@@ -47,6 +47,7 @@ static void keyboard_callback(registers_t *regs) {
         print_string(str);
     }
 }
+
 //将特定中断号与处理函数绑定，确保当键盘中断发生时，调用 keyboard_callback
 void init_keyboard() {
     register_interrupt_handler(IRQ1, keyboard_callback);

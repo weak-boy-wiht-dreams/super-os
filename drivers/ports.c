@@ -14,7 +14,6 @@ in %%dx, %%al：表示从由 dx 寄存器指定的端口读取一个字节，并
 }
 
 void port_byte_out(uint16_t port, uint8_t data) {
-
     asm("out %%al, %%dx" : : "a" (data), "d" (port));
 }
 

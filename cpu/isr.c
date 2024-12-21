@@ -39,8 +39,10 @@ void isr_install() {
     set_idt_gate(29, (uint32_t) isr29);
     set_idt_gate(30, (uint32_t) isr30);
     set_idt_gate(31, (uint32_t) isr31);
-/*x86 的默认硬件中断范围是从向量号 0x08 开始，但操作系统通常需要避开低编号中断，保留它们给 CPU 异常。
-因此，使用以下代码将 PIC 的中断起始位置从 0x08 和 0x10 重映射到 0x20 和 0x28（即 IRQ0-IRQ15*/
+
+    /*x86 的默认硬件中断范围是从向量号 0x08 开始，但操作系统通常需要避开低编号中断，保留它们给 CPU 异常。
+    因此，使用以下代码将 PIC 的中断起始位置从 0x08 和 0x10 重映射到 0x20 和 0x28（即 IRQ0-IRQ15*/
+    
     // Remap the PIC
     port_byte_out(0x20, 0x11);
     port_byte_out(0xA0, 0x11);
@@ -73,7 +75,8 @@ void isr_install() {
 
     load_idt(); 
 }
-
+/*x86 的默认硬件中断范围是从向量号 0x08 开始，但操作系统通常需要避开低编号中断，保留它们给 CPU 异常。
+因此，使用以下代码将 PIC 的中断起始位置从 0x08 和 0x10 重映射到 0x20 和 0x28（即 IRQ0-IRQ15*/
 /* 定义中断处理的返回信息 */
 char *exception_messages[] = {
         "Division By Zero",
@@ -118,6 +121,7 @@ char *exception_messages[] = {
 void register_interrupt_handler(uint8_t n, isr_t handler) {
     interrupt_handlers[n] = handler;
 }
+
 /*EOI 是一个信号，告诉 PIC（可编程中断控制器）中断已被处理完毕，可以移除当前中断并准备好处理下一个中断。
 如果当前中断号大于等于 40（即属于从 8259A PIC 的从属 PIC 处理的中断），则首先向从属 PIC 发送 EOI 信号。
 然后，向主 PIC 发送 EOI 信号*/
