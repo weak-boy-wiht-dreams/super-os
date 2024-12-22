@@ -12,7 +12,8 @@ void init_sector_bitmap() {
 
 // 分配指定数量的扇区
 uint32_t allocate_sectors(uint32_t count) {
-    uint32_t start_sector = 8; // 从扇区 8 开始分配，前 8 个扇区保留
+    uint32_t start_sector = 8;
+    print_string("Allocating sectors...\n"); // 从扇区 8 开始分配，前 8 个扇区保留
     for (uint32_t i = start_sector; i < MAX_SECTORS; i++) {
         // 如果找到空闲扇区
         if (!(sector_bitmap[i / 8] & (1 << (i % 8)))) {
@@ -20,14 +21,18 @@ uint32_t allocate_sectors(uint32_t count) {
             count--; // 剩余需要分配的扇区数减一
             if (count == 0) {
                 return i - count; // 返回起始扇区编号
-            }
+            }                                          
+            
         }
     }
-    return -1; // 无足够空闲扇区
+    print_string("Error: Not enough free sectors.\n");
+    return -1; // 无足够空闲扇区                         
 }
 
 // 释放从指定起始扇区开始的多个扇区
-void free_sectors(uint32_t start, uint32_t count) {
+void free_sectors(uint32_t start, uint32_t count)
+ {
+       print_string("Freeing sectors...\n");
     for (uint32_t i = start; i < start + count; i++) {
         sector_bitmap[i / 8] &= ~(1 << (i % 8)); // 标记为空闲
     }
