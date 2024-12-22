@@ -123,8 +123,10 @@ void execute_command(char *input) {
         print_string("Enter file name: ");
         char filename[32];
         string_copy(filename, "testfile"); // 模拟用户输入文件名
+        print_nl();
 
-        print_string("Enter file size in bytes: ");
+        print_string("Enter file size in bytes: (testfile)");
+        print_nl();
         char size_str[16];
         string_copy(size_str, "128"); // 模拟用户输入文件大小
         uint32_t size = string_to_int(size_str);
@@ -134,13 +136,15 @@ void execute_command(char *input) {
         } else {
             print_string("Failed to create file.\n");
         }
+        print_string("\n> ");
     } else if (compare_string(input, "WRITE") == 0) {
         // 写入文件
         print_string("Enter file name: ");
         char filename[32];
         string_copy(filename, "testfile"); // 模拟用户输入文件名
+        print_nl();
 
-        print_string("Enter data to write: ");
+        print_string("Enter data to write: \n");
         char data[512];
         string_copy(data, "Hello, this is a test."); // 模拟用户输入数据
 
@@ -149,11 +153,14 @@ void execute_command(char *input) {
         } else {
             print_string("Failed to write data.\n");
         }
+        print_string("\n> ");
+        
     } else if (compare_string(input, "READ") == 0) {
         // 读取文件
         print_string("Enter file name: ");
         char filename[32];
         string_copy(filename, "testfile"); // 模拟用户输入文件名
+        print_nl();
 
         char buffer[512];
         if (read_file(filename, buffer) == 0) {
@@ -163,11 +170,12 @@ void execute_command(char *input) {
         } else {
             print_string("Failed to read file.\n");
         }
+        print_string("\n> ");
     } else if (compare_string(input, "DELETE") == 0) {
         // 删除文件
         print_string("Enter file name: ");
         char filename[32];
-        string_copy(filename, "testfile"); // 模拟用户输入文件名
+        string_copy(filename, "testfile"); // 模拟用户输入文件名print_string("\n> ");
 
         if (delete_file(filename) == 0) {
             print_string("File deleted successfully!\n");
@@ -184,21 +192,3 @@ void execute_command(char *input) {
         print_string("\n> ");
     }
 }
-
-
-
-/*这是我在qemu里写的自己的极简的os操作系统的目录：zero@zero-VirtualBox:~/super-os$ ls -R
-.:
-boot  cpu  drivers  kernel  kernel.bin  Makefile  os-image.bin
-
-./boot:
-disk.asm  gdt.asm  kernel_entry.asm  kernel_entry.o  mbr.asm  mbr.bin  print-16bit.asm  print-32bit.asm  switch-to-32bit.asm
-
-./cpu:
-idt.c  idt-gdt-cpu.txt  idt.h  idt.o  interrupt.asm  interrupt.o  isr.c  isr.h  isr.o  timer.c  timer.h  timer.o
-
-./drivers:
-display.c  display.h  display.o  keyboard.c  keyboard.h  keyboard.o  ports.c  ports.h  ports.o
-
-./kernel:
-kernel.c  kernel.o  util.c  util.h  util.o，目前我实现了bios的内核加载，gdt段描述符的定义，idt的简单的中断门描述，可以打印字符串和换行了，接下来准备实现文件管理系统，但在设计文件管理系统中，我不准备*/
