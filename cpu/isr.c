@@ -5,7 +5,6 @@
 #include "../kernel/util.h"
 isr_t interrupt_handlers[256];
 
-
 void isr_install() {
     set_idt_gate(0, (uint32_t) isr0);
     set_idt_gate(1, (uint32_t) isr1);
@@ -39,8 +38,9 @@ void isr_install() {
     set_idt_gate(29, (uint32_t) isr29);
     set_idt_gate(30, (uint32_t) isr30);
     set_idt_gate(31, (uint32_t) isr31);
-/*x86 的默认硬件中断范围是从向量号 0x08 开始，但操作系统通常需要避开低编号中断，保留它们给 CPU 异常。
-因此，使用以下代码将 PIC 的中断起始位置从 0x08 和 0x10 重映射到 0x20 和 0x28（即 IRQ0-IRQ15*/
+    /*x86 的默认硬件中断范围是从向量号 0x08 开始，但操作系统通常需要避开低编号中断，保留它们给 CPU 异常。
+    因此，使用以下代码将 PIC 的中断起始位置从 0x08 和 0x10 重映射到 0x20 和 0x28（即 IRQ0-IRQ15*/
+    
     // Remap the PIC
     port_byte_out(0x20, 0x11);
     port_byte_out(0xA0, 0x11);

@@ -1,6 +1,5 @@
 #include <stdint.h>
 
-
 unsigned char port_byte_in(uint16_t port) {
     unsigned char result;
     /* %%dx：这是目标端口号，传递给 dx 寄存器。端口号是一个 16 位的值，在此函数中由 port 参数传递给 dx 寄存器。
