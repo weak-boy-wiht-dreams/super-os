@@ -19,7 +19,7 @@ int string_length(char s[]) {
 //逆转
 void reverse(char s[]) {
     int c, i, j;
-    for (i = 0, j = string_length(s)-1; i < j; i++, j--) {
+    for (i = 0, j = string_length(s) - 1; i < j; i++, j--) {
         c = s[i];
         s[i] = s[j];
         s[j] = c;
@@ -46,7 +46,10 @@ void append(char s[], char n) {
     s[len] = n;
     s[len + 1] = '\0';
 }
+
 //删除字符串的最后一个字符
+//返回true: 字符串删除前不为空，可以删除
+//返回false: 字符串删除前已经为空，不能再删除
 bool backspace(char s[]) {
     int len = string_length(s);
     if (len > 0) {
@@ -140,3 +143,26 @@ void test_input() {
     }
 }
 */
+
+void print_hex(uint32_t value) {
+    // 打印前缀 "0x"
+    print_string("0x");
+
+    // 创建一个用于打印的字符数组
+    char hex_str[9]; // 一个 32 位的十六进制数最大会有 8 位 + 1 字符串结束符
+    hex_str[8] = '\0'; // 结束符
+
+    // 用十六进制格式填充字符数组
+    for (int i = 7; i >= 0; i--) {
+        uint8_t hex_digit = value & 0xF;  // 获取最低4位
+        if (hex_digit < 10) {
+            hex_str[i] = '0' + hex_digit;  // 数字 0-9
+        } else {
+            hex_str[i] = 'A' + (hex_digit - 10);  // 字母 A-F
+        }
+        value >>= 4;  // 右移 4 位，处理下一个十六进制位
+    }
+
+    // 打印生成的十六进制字符串
+    print_string(hex_str);
+}

@@ -1,5 +1,6 @@
 #include "../drivers/ports.h"  // 包含 I/O 端口读写的函数
 #include "fs.h"               // 文件系统的全局定义和函数声明
+#include "../kernel/util.h"
 
 // 定义 ATA 主通道的硬件寄存器端口地址
 #define ATA_PRIMARY_DATA       0x1F0  // 数据寄存器，用于数据传输
@@ -27,29 +28,6 @@ void ata_wait_busy() {
 
 #define ATA_CMD_IDENTIFY 0xEC  // 硬盘识别命令
 
-
-void print_hex(uint32_t value) {
-    // 打印前缀 "0x"
-    print_string("0x");
-
-    // 创建一个用于打印的字符数组
-    char hex_str[9]; // 一个 32 位的十六进制数最大会有 8 位 + 1 字符串结束符
-    hex_str[8] = '\0'; // 结束符
-
-    // 用十六进制格式填充字符数组
-    for (int i = 7; i >= 0; i--) {
-        uint8_t hex_digit = value & 0xF;  // 获取最低4位
-        if (hex_digit < 10) {
-            hex_str[i] = '0' + hex_digit;  // 数字 0-9
-        } else {
-            hex_str[i] = 'A' + (hex_digit - 10);  // 字母 A-F
-        }
-        value >>= 4;  // 右移 4 位，处理下一个十六进制位
-    }
-
-    // 打印生成的十六进制字符串
-    print_string(hex_str);
-}
 //判断硬盘是否存在。
 void ata_identify() {
     print_string("Starting ATA identify...\n");
@@ -140,7 +118,7 @@ void ata_read_sector(uint32_t lba, uint8_t *buffer) {
 
     // 发送读取命令
     port_byte_out(ATA_PRIMARY_COMMAND, ATA_CMD_READ_SECTORS);
-    print_string("444444 ");
+    //print_string("444444 ");
     ata_wait_drq(); // 等待硬盘的数据准备好（DRQ 位为 1）
     
     // 从数据寄存器读取 512 字节数据（每次读取 2 字节，共 256 次循环）
@@ -148,6 +126,8 @@ void ata_read_sector(uint32_t lba, uint8_t *buffer) {
         ((uint16_t *)buffer)[i] = port_word_in(ATA_PRIMARY_DATA); // 每次从数据端口读取 2 字节
     }
     uint8_t status = port_byte_in(ATA_PRIMARY_STATUS);
+
+    ata_wait_busy();
 
 //print_hex(status);
 //print_nl();

@@ -22,3 +22,4 @@ void string_copy(char *dest, const char *src);
 void get_user_input(char *buffer);
 void test_input();
 void print_int(int num);
+void print_hex(uint32_t value);
