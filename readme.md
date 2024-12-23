@@ -25,8 +25,8 @@ NASM 汇编器、i686-elf-gcc 编译器、i686-elf-ld 链接器
 3.也可以尝试在Windows运行（Windows支持开发小linux）<br />
 
 # 设计文档与实验文档链接
-1设计文档：        <br />
-2实验文档：        <br />
+### 1设计文档：        <br />
+### 2实验文档：        <br />
 
 # 目前进度与架构设计
 ### 启动流程
@@ -68,7 +68,7 @@ dev上的博客,https://dev.to/frosnerd/writing-my-own-boot-loader-3mld 我们�
 
   MIT的xv6教学课程
 
-chatgpt-4O
+chatgpt-4o
 
 
 
