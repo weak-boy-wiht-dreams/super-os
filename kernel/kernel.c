@@ -25,7 +25,7 @@ void start_kernel() {
 
     // 初始化文件管理系统
     print_string("Initializing the file system.\n");
-     ata_identify();
+    ata_identify();
     init_sector_bitmap();       // 初始化位图
     init_root_directory();      // 初始化根目录
 
