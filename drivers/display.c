@@ -22,7 +22,6 @@ int get_cursor() {
     return offset * 2;
 }
 
-
 //获取相对当前行开头位置的偏移量
 int get_inline_offset(){
     int offset = get_cursor();
@@ -91,7 +90,6 @@ int scroll_ln(int offset) {
 
     return offset - 2 * MAX_COLS;
 }
-
 
 void print_string(char *string) {
     int offset = get_cursor();
