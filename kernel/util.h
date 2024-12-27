@@ -23,3 +23,4 @@ void get_user_input(char *buffer);
 void test_input();
 void print_int(int num);
 void print_hex(uint32_t value);
+int compare_string_forward(char s1[],char s2[]);

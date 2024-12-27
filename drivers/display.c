@@ -8,7 +8,7 @@
 
 /**
  * 设置光标的位置
- * @param offset 偏移量，以字节为单位（一个字符占2字节）
+ * offset 偏移量，以字节为单位（一个字符占2字节）
  */
 void set_cursor(int offset) {
     offset /= 2;  // 将字节偏移量转换为字符偏移量
@@ -20,7 +20,7 @@ void set_cursor(int offset) {
 
 /**
  * 获取光标的当前位置
- * @return 光标的字节偏移量
+ * 光标的字节偏移量
  */
 int get_cursor() {
     port_byte_out(REG_SCREEN_CTRL, 14);

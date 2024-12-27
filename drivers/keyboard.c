@@ -57,15 +57,24 @@ static void keyboard_callback(registers_t *regs) {
                 //向左移动输入位置
                 set_input_pos(INPUT_POS - 1);
             }
-        } else if (scancode == ENTER) {
+            //&& !other_mode
+        } else if (scancode == ENTER ) {
             print_nl();
             execute_command(key_buffer);
             key_buffer[0] = '\0';
             set_input_pos(0);
-        }else {
+
+        }/*
+        else if(scancode == ENTER&&other_mode){
+         print_nl();
+         key_buffer[0] = '\0';
+
+        }*/
+        else {
             char letter = sc_ascii[(int) scancode];
             set_letter_at_pos(key_buffer, INPUT_POS, letter);
             char str[2] = {letter, '\0'};
+            //print_string("a");
             print_string(str);
         }
     }else{
@@ -119,4 +128,12 @@ bool at_buffer_end(char* buffer){
 // 在移动光标位置后，相应移动输入位置
 void set_input_pos(int pos) {
     INPUT_POS = pos;
+}
+
+char get_user_input(){
+
+
+
+
+    
 }

@@ -13,7 +13,7 @@ void init_sector_bitmap() {
 // 分配指定数量的扇区
 uint32_t allocate_sectors(uint32_t count) {
     uint32_t start_sector = 8;
-    print_string("Allocating sectors...\n"); // 从扇区 8 开始分配，前 8 个扇区保留
+    print_string("Allocating sectors...\n"); // 测试
     for (uint32_t i = start_sector; i < MAX_SECTORS; i++) {
         // 如果找到空闲扇区
         if (!(sector_bitmap[i / 8] & (1 << (i % 8)))) {

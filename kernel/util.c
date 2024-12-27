@@ -61,12 +61,27 @@ bool backspace(char s[]) {
 }
 
 //比较两个字符串,后期编写文件管理的各个指令时，可以用这种方式进行直接对比字符串。
+//这个对比必须全符合
 int compare_string(char s1[], char s2[]) {
     int i;
     for (i = 0; s1[i] == s2[i]; i++) {
         if (s1[i] == '\0') return 0;
     }
     return s1[i] - s2[i];
+}
+
+int compare_string_forward(char s1[],char s2[]){
+    int i=0;
+       while (s1[i] != '\0' && s1[i] != ' ') {
+        i++;
+    }
+    for (int j = 0; j < i; j++) {
+        if (s1[j] != s2[j]) {
+            return -1;  
+        }
+    }
+     return 0;
+
 }
 
 int string_to_int(const char *str) {

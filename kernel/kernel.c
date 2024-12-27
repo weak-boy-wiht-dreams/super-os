@@ -6,8 +6,44 @@
 #include "util.h"              // 辅助函数
 //#include "../fs/file.c"
 //#include "../fs/bitmap.c"
+void split_input(char *input, char *output[]){
+     int i=0,j=0,k=0;
+     int nums =0;
+     while(input[i]!='\0'){
+          if(input[i]==' '||input[i]=='\0'){
+          nums++;//一共有多少个指令（也就是子字符串）；
+     }  
+    i++;
+         }
+
+    for (int idx = 0; idx < nums; idx++) {
+        output[idx] = (char *) &input[64* idx];  // 指向输入字符串中的不同位置
+    }
+
+    i=0;
+     while(nums>0){
+    // while(input[i]==' ') {
+          //  i++;
+          //  }
+            j=0;
+     while (input[i] != ' ' && input[i] != '\0') {
+            output[k][j] = input[i];  // 将字符复制到 output[k]
+            i++;
+            j++;
+        }
+        output[k][j] = '\0';
+            i++;
+            k++;
+            nums--;
 
 
+}
+ output[k] = '\0';
+
+}
+
+
+bool other_mode = false;
 void start_kernel() {
     clear_screen();
     print_string("Super-OS initialized.\n");
@@ -39,96 +75,31 @@ void start_kernel() {
     print_string("> ");
 }
 
-/*
+
 void execute_command(char *input) {
     if (compare_string(input, "EXIT") == 0) {
         print_string("Stopping the CPU. Bye!\n");
         asm volatile("hlt");
-    } else if (compare_string(input, "CREATE") == 0) {
+    } else if (compare_string_forward(input, "CREATE") == 0) {
         // 创建文件
+         //other_mode =true;
+         char *output[10];
+         split_input(input,output);
+         for(int i=0;i<10;i++){
+            print_string(output[i]);
+
+         }
         print_string("Enter file name: ");
+       // key_buffer[0] = '/0';
+       // execute_command(input);
         char filename[32];
-       
-         filename[0]=1;
-         
-           //key_buffer[0] = '\0';
-       // void test_input();
-        //print_string("\n> ");
-       // get_user_input(filename);
-        print_string("Enter file size in bytes: ");
-        char size_str[16];
-         size_str[0]=1;
-//get_user_input(size_str);
-        uint32_t size = string_to_int(size_str);
-        if (create_file(filename, size) == 0) {
-            print_string("File created successfully!\n");
-        } else {
-            print_string("Failed to create file.\n");
-        }
-    } else if (compare_string(input, "WRITE") == 0) {
-        // 写入文件
-        //print_string("Enter file name: ");
-        char filename[32];
-        filename[0]=1;
-        //get_user_input(filename);
-        print_string("Enter data to write: ");
-        char data[512];
-        data[0]=12;
-       // get_user_input(data);
-        if (write_file(filename, data) == 0) {
-            print_string("Data written successfully!\n");
-        } else {
-            print_string("Failed to write data.\n");
-        }
-    } else if (compare_string(input, "READ") == 0) {
-        // 读取文件
-        print_string("Enter file name: ");
-        char filename[32];
-        get_user_input(filename);
-        char buffer[512];
-        if (read_file(filename, buffer) == 0) {
-            print_string("File content:\n");
-            print_string(buffer);
-            print_nl();
-        } else {
-            print_string("Failed to read file.\n");
-        }
-    } else if (compare_string(input, "DELETE") == 0) {
-        // 删除文件
-        print_string("Enter file name: ");
-        char filename[32];
-        get_user_input(filename);
-        if (delete_file(filename) == 0) {
-            print_string("File deleted successfully!\n");
-        } else {
-            print_string("Failed to delete file.\n");
-        }
-    } else if (compare_string(input, "LS") == 0) {
-        // 列出目录内容
-        print_string("Root directory:\n");
-        list_directory();
-    } else {
-        print_string("Unknown command: ");
-        print_string(input);
-        print_string("\n> ");
-    }
-}
-*/
-void execute_command(char *input) {
-    if (compare_string(input, "EXIT") == 0) {
-        print_string("Stopping the CPU. Bye!\n");
-        asm volatile("hlt");
-    } else if (compare_string(input, "CREATE") == 0) {
-        // 创建文件
-        print_string("Enter file name: ");
-        char filename[32];
-        string_copy(filename, "testfile"); // 模拟用户输入文件名
+        //string_copy(filename, "testfile"); // 模拟用户输入文件名
         print_nl();
 
         print_string("Enter file size in bytes: (testfile)");
         print_nl();
         char size_str[16];
-        string_copy(size_str, "128"); // 模拟用户输入文件大小
+        //string_copy(size_str, "128"); // 模拟用户输入文件大小
         uint32_t size = string_to_int(size_str);
 
         if (create_file(filename, size) == 0) {
@@ -192,3 +163,20 @@ void execute_command(char *input) {
         print_string("\n> ");
     }
 }
+
+void create_command(char*input,char*filename,uint32_t*size){
+     if(compare_string_forward(input,"CREATE")!=0)
+    {
+        print_string("No such rules!");
+    }
+
+else {
+
+
+
+     }
+
+}
+
+
+
