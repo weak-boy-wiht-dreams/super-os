@@ -119,6 +119,13 @@ void get_user_input(char *buffer) {
     }
     print_string("\n ");
 }
+
+void print_int(int num) {
+    char buffer[12]; // 最大支持 32 位整数（10 位数字 + 1 符号 + 1 结束符）
+    int_to_string(num, buffer); // 调用已有的 int_to_string 函数
+    print_string(buffer);       // 使用已有的 print_string 函数打印
+}
+
 /*
 
 void test_input() {

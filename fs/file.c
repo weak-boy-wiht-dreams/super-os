@@ -1,4 +1,5 @@
 #include "fs.h"  // 包含文件系统的全局定义和声明
+#include"../kernel/util.h"
 //#include"directory.c"
 // 创建一个新文件
 int create_file(const char *filename, uint32_t size) {
@@ -10,6 +11,9 @@ int create_file(const char *filename, uint32_t size) {
             root_directory.entries[i].start_sector = allocate_sectors((size + 511) / 512); // 分配扇区
             root_directory.entries[i].is_directory = 0; // 标记为文件
             ata_write_sector(3, (uint8_t *)&root_directory); // 写回根目录表
+            //print_string(root_directory.entries[i].start_sector);
+            print_string(", Start sector: ");
+            print_int( root_directory.entries[i].start_sector);
             return 0; // 成功创建
         }
     }
