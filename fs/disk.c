@@ -18,7 +18,7 @@
 #define ATA_STATUS_BUSY        0x80   // 状态寄存器的 BUSY 位，表示硬盘忙
 #define ATA_STATUS_DRQ         0x08   // 状态寄存器的 DRQ 位，表示数据准备好
 
-// 等待硬盘不忙（BUSY 位为 0）
+// 等待硬盘不忙(BUSY 位为 0)
 
 
 #include "../drivers/display.h"  // 假设你已经有了这个头文件来进行屏幕打印
@@ -88,15 +88,10 @@ void ata_wait_drq() {
 }
 */
 
-
-
-
-
-
 // 等待硬盘的数据请求（DRQ 位为 1），表示数据准备好
 
 void ata_wait_drq() {
-     //print_string("444444 ");
+    //print_string("444444 ");
     while (!(port_byte_in(ATA_PRIMARY_STATUS) & ATA_STATUS_DRQ));  // 读取状态寄存器，检查 DRQ 位是否为 1
 }
 

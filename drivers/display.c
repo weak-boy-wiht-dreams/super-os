@@ -30,6 +30,7 @@ int get_cursor() {
     return offset * 2;  // 返回字节偏移量
 }
 
+
 /**
  * 获取当前行中光标的相对偏移量
  * @return 行内偏移量
@@ -141,6 +142,7 @@ int scroll_ln(int offset) {
 
     return offset - 2 * MAX_COLS;  // 更新光标位置
 }
+
 
 /**
  * 在屏幕上打印字符串
