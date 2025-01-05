@@ -59,7 +59,7 @@ uint32_t get_ticks() {
 // 延时函数
 void delay(int milliseconds) {
     uint32_t start = get_ticks();
-    uint32_t ticks_to_wait = milliseconds * TIMER_FREQ / 1000;
+    uint32_t ticks_to_wait = milliseconds * PIT_FREQUENCY / 1000;
     
     while (get_ticks() - start < ticks_to_wait) {
         // 等待
