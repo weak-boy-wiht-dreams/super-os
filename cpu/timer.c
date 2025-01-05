@@ -5,9 +5,7 @@
 #include "isr.h"                 // 中断服务例程
 
 // tick 是一个全局变量，用于记录定时器的“滴答次数”，即中断发生的次数
-uint32_t tick = 0;
-
-#define PIT_FREQUENCY 1193180   // PIT芯片的输入频率 (这个神奇的数据是咋来的)
+static volatile uint32_t tick = 0;
 
 /**
  * 每当定时器中断（PIT，Programmable Interval Timer）发生时，timer_callback 函数会被调用。
@@ -17,12 +15,6 @@ uint32_t tick = 0;
  */
 static void timer_callback(registers_t *regs) {
     tick++;  // 增加滴答计数
-    print_string("Tick: ");  // 打印字符串 "Tick: "
-
-    char tick_ascii[256];
-    int_to_string(tick, tick_ascii);  // 将 tick 转换为字符串
-    print_string(tick_ascii);        // 打印当前滴答次数
-    print_nl();                      // 换行
 }
 
 /**
@@ -36,7 +28,7 @@ void init_timer(uint32_t freq) {
     register_interrupt_handler(IRQ0, timer_callback);
 
     /* 计算分频器值。PIT 的硬件时钟频率固定为 1193180 Hz */
-    uint32_t divisor = 1193180 / freq;
+    uint32_t divisor = PIT_FREQUENCY / freq;
     uint8_t low  = (uint8_t)(divisor & 0xFF);      // 分频器值的低 8 位
     uint8_t high = (uint8_t)((divisor >> 8) & 0xFF); // 分频器值的高 8 位
 
@@ -51,18 +43,35 @@ void init_timer(uint32_t freq) {
 }
 //计时器中断的应用：延时函数
 
-// 获取系统启动后的时钟计数
+// 移除get_ticks中的测试代码
 uint32_t get_ticks() {
     return tick;
 }
 
-// 延时函数
-void delay(int milliseconds) {
-    uint32_t start = get_ticks();
-    uint32_t ticks_to_wait = milliseconds * PIT_FREQUENCY / 1000;
+// 分离测试函数
+void test_timer() {
+    static uint32_t last_tick = 0;  // 静态变量记录上次的tick值
+    uint32_t current_tick = get_ticks();
     
-    while (get_ticks() - start < ticks_to_wait) {
-        // 等待
-        __asm__ volatile("hlt");  // CPU空闲时进入休眠状态
+    // 只在tick值变化时打印
+    if (current_tick != last_tick) {
+        print_string("Tick: ");
+        char tick_ascii[256];
+        int_to_string(current_tick, tick_ascii);
+        print_string(tick_ascii);
+        print_nl();
+        
+        last_tick = current_tick;
     }
 }
+
+void delay(int milliseconds) {
+    uint32_t start = get_ticks();
+    uint32_t ticks_to_wait = milliseconds * TIMER_FREQ / 1000;
+    
+    while (get_ticks() - start < ticks_to_wait) {
+        __asm__ volatile("hlt");
+    }
+}
+
+

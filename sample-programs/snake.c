@@ -1,7 +1,9 @@
 // snake.c
 #include "snake.h"
-#include "../../drivers/display.h"
-#include "../../kernel/util.h"
+#include "../drivers/display.h"
+#include "../kernel/util.h"
+#include "../cpu/timer.h"
+#include "../cpu/random.h"
 
 Game init_game() {
     Game game = {0};  // 初始化所有字段为0
@@ -74,10 +76,9 @@ void flush_score(int score) {
     print_string(score_str);
 }
 
-void flush_game_over(int final_score) {void set_cursor(int offset)
+void flush_game_over(int final_score) {
     print_string("GAME OVER!");
-    
-    offset = get_offset(GAME_WIDTH/2 - 7, GAME_HEIGHT/2 + 1);
+    int offset = get_offset(GAME_WIDTH/2 - 7, GAME_HEIGHT/2 + 1);
     set_cursor(offset);
     print_string("Final Score: ");
     char score_str[32];
@@ -191,7 +192,7 @@ void game_loop() {
         flush(&game);
         
         if (game.state == GAME_RUNNING) {
-            Direction input = RIGHT; //get_input();
+            Direction input = RIGHT;   //get_input(); //TODO: 获取键盘输入
             move_snake(&game, input);
             delay(200);
         }

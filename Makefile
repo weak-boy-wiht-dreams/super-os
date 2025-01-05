@@ -3,10 +3,10 @@
 # $^ 表示所有依赖项
 
 # 自动检测 kernel、drivers、cpu 和 fs 目录下的所有 .c 源文件
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c fs/*.c)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c fs/*.c sample-programs/*.c)
 
 # 自动检测 kernel、drivers、cpu 和 fs 目录下的所有 .h 头文件
-HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h fs/*.h)
+HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h fs/*.h sample-programs/*.h)
 
 # 将 .c 文件转换为 .o 文件，并手动添加 cpu/interrupt.o
 OBJ_FILES = ${C_SOURCES:.c=.o cpu/interrupt.o}
@@ -100,6 +100,9 @@ clean:
 	$(RM) drivers/*.o
 	$(RM) cpu/*.o
 	$(RM) fs/*.o
+
+	$(RM) sample-programs/*.o
+
 	$(RM) my_disk.img
 # 使用 $(RM) 删除所有临时文件和中间文件，包括 .bin、.o、.dis 和 .elf 文件
 # 删除 my_disk.img 文件以节省空间

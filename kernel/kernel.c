@@ -2,11 +2,16 @@
 #include "../drivers/display.h" // 屏幕显示功能
 #include "../drivers/keyboard.h" // 键盘功能
 #include "../cpu/isr.h"        // 中断处理
-#include "../cpu/timer.h"      // 定时器
+
+#include "../cpu/timer.h"      //定时器
 #include "util.h"              // 辅助函数
+
+#include "../sample-programs/snake.h"
+
 //#include "../fs/file.c"
 //#include "../fs/bitmap.c"
 
+volatile bool should_start_game = false;
 
 void start_kernel() {
     clear_screen();
@@ -20,9 +25,6 @@ void start_kernel() {
     print_string("Enabling external interrupts.\n");
     asm volatile("sti");
 
-
-/**/
-
     // 初始化文件管理系统
     print_string("Initializing the file system.\n");
     ata_identify();
@@ -33,10 +35,25 @@ void start_kernel() {
     print_string("Initializing keyboard (IRQ 1).\n");
     init_keyboard();
 
+    //初始化定时器
+    print_string("Initializing Timer (IRQ 0).\n");
+    init_timer(TIMER_FREQ);
+
     // 打印欢迎信息
     clear_screen();
     print_string("Super-OS File System\n");
     print_string("> ");
+
+    //添加内核主循环
+    while(1) {
+        if (should_start_game) {
+            should_start_game = false;
+            // 确保中断是启用的
+            __asm__ volatile("sti");
+            game_loop();
+        }
+        __asm__ volatile("hlt");
+    }
 }
 
 /*
@@ -186,6 +203,9 @@ void execute_command(char *input) {
         // 列出目录内容
         print_string("Root directory:\n");
         list_directory();
+    } else if (compare_string(input, "SNAKE") == 0){
+        should_start_game = true;
+        print_string("Starting Snake game...\n");
     } else {
         print_string("Unknown command: ");
         print_string(input);
