@@ -74,9 +74,7 @@ void flush_score(int score) {
     print_string(score_str);
 }
 
-void flush_game_over(int final_score) {
-    int offset = get_offset(GAME_WIDTH/2 - 5, GAME_HEIGHT/2);
-    set_cursor(offset);
+void flush_game_over(int final_score) {void set_cursor(int offset)
     print_string("GAME OVER!");
     
     offset = get_offset(GAME_WIDTH/2 - 7, GAME_HEIGHT/2 + 1);
@@ -193,7 +191,7 @@ void game_loop() {
         flush(&game);
         
         if (game.state == GAME_RUNNING) {
-            Direction input = get_input();
+            Direction input = RIGHT; //get_input();
             move_snake(&game, input);
             delay(200);
         }
