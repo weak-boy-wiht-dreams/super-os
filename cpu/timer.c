@@ -7,6 +7,8 @@
 // tick 是一个全局变量，用于记录定时器的“滴答次数”，即中断发生的次数
 uint32_t tick = 0;
 
+#define PIT_FREQUENCY 1193180   // PIT芯片的输入频率 (这个神奇的数据是咋来的)
+
 /**
  * 每当定时器中断（PIT，Programmable Interval Timer）发生时，timer_callback 函数会被调用。
  * 该函数会增加 tick 计数，并将当前的滴答次数打印到屏幕上。
@@ -46,4 +48,23 @@ void init_timer(uint32_t freq) {
 
     /* 将分频器值的高 8 位发送到通道 0 的数据端口（0x40） */
     port_byte_out(0x40, high);
+}
+
+
+//计时器中断的应用：延时函数
+
+// 获取系统启动后的时钟计数
+uint32_t get_ticks() {
+    return tick;
+}
+
+// 延时函数
+void delay(int milliseconds) {
+    uint32_t start = get_ticks();
+    uint32_t ticks_to_wait = milliseconds * PIT_FREQUENCY / 1000;
+    
+    while (get_ticks() - start < ticks_to_wait) {
+        // 等待
+        __asm__ volatile("hlt");  // CPU空闲时进入休眠状态
+    }
 }
