@@ -20,6 +20,10 @@ void clear_screen();
 int scroll_ln(int offset);
 void print_backspace();
 
+int get_offset(int col, int row);
+void set_char_at_video_memory(char character, int offset);
+void set_cursor(int offset);
+
 
 /* 光标控制 */
 bool move_cursor_left(char* key_buffer);

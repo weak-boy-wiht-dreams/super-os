@@ -99,11 +99,15 @@ int move_offset_to_new_line(int offset) {
 }
 
 /**
- * 在视频内存的指定位置设置字符
+ * 在视频内存的指定位置设置字符'\0';
  * @param character 要显示的字符
  * @param offset 字节偏移量
  */
 void set_char_at_video_memory(char character, int offset) {
+    // 防止超出屏幕边界
+    if (offset > MAX_COLS * MAX_ROWS * 2) {
+        return;
+    }
     uint8_t *vidmem = (uint8_t *) VIDEO_ADDRESS;
     vidmem[offset] = character;  // 设置字符
     vidmem[offset + 1] = WHITE_ON_BLACK;  // 设置颜色
