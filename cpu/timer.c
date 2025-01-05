@@ -49,8 +49,6 @@ void init_timer(uint32_t freq) {
     /* 将分频器值的高 8 位发送到通道 0 的数据端口（0x40） */
     port_byte_out(0x40, high);
 }
-
-
 //计时器中断的应用：延时函数
 
 // 获取系统启动后的时钟计数
@@ -61,7 +59,7 @@ uint32_t get_ticks() {
 // 延时函数
 void delay(int milliseconds) {
     uint32_t start = get_ticks();
-    uint32_t ticks_to_wait = milliseconds * PIT_FREQUENCY / 1000;
+    uint32_t ticks_to_wait = milliseconds * TIMER_FREQ / 1000;
     
     while (get_ticks() - start < ticks_to_wait) {
         // 等待
