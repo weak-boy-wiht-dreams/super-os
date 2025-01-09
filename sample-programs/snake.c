@@ -4,6 +4,7 @@
 #include "../kernel/util.h"
 #include "../cpu/timer.h"
 #include "../cpu/random.h"
+#include "../drivers/keyboard.h"
 
 Game init_game() {
     Game game = {0};  // 初始化所有字段为0
@@ -185,18 +186,37 @@ void exit_game(Game* game) {
     game->state = GAME_OVER;
 }
 
+Direction get_input(){
+    switch (get_next_char_from_keychain_buffer()) {
+        case 'W': return UP;
+        case 'A': return LEFT;
+        case 'S': return DOWN;
+        case 'D': return RIGHT;
+        //用户发出退出游戏指令
+        case 'Q': return -1;
+        default: return RIGHT;
+    }
+}
+
 void game_loop() {
     Game game = init_game();
+
+    flush(&game);
     
     while (game.state != GAME_OVER) {
         flush(&game);
         
         if (game.state == GAME_RUNNING) {
-            Direction input = RIGHT;   //get_input(); //TODO: 获取键盘输入
+            int input = get_input(); //TODO: 获取键盘输入
+            if(input == -1){
+                game.state = GAME_OVER;
+                clear_screen();
+                break;
+            }
             move_snake(&game, input);
-            delay(200);
+            delay(100);
         }
     }
     
-    flush(&game);
+    
 }

@@ -3,7 +3,6 @@
 #include "../cpu/isr.h"
 #include "display.h"
 #include "../kernel/util.h"
-#include <stdint.h>
 #include <stdbool.h>
 #include "../kernel/kernel.h"
 
@@ -34,8 +33,13 @@ const char sc_ascii[] = {'?', '?', '1', '2', '3', '4', '5', '6',
                          'H', 'J', 'K', 'L', ';', '\'', '`', '?', '\\', 'Z', 'X', 'C', 'V',
                          'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
 
-//存储当前输入位置
+
+//存储key_buffer当前输入位置, 为了协作兼容性，暂不修改变量名
 int INPUT_POS = 0;
+
+//存储keychain_buffer当前输入位置
+int CHAIN_INPUT_POS = 0;
+
 
 //处理普通键与功能键盘
 static void keyboard_callback(registers_t *regs) {
@@ -50,6 +54,15 @@ static void keyboard_callback(registers_t *regs) {
 
     if (scancode > SC_MAX && !is_extended) return;
 
+    char* _;
+    // 将输入的键读取到keychain_buffer中
+    // TODO: 暂不支持拓展码，需要修改。
+    append_key_to_buffer(scancode, 
+                  keychain_buffer, 
+             _, 
+               CHAIN_INPUT_POS, 
+      set_chain_input_pos);
+
     if(!is_extended){
         if (scancode == BACKSPACE) {
             if (at_buffer_end(key_buffer) && backspace(key_buffer)) {
@@ -62,10 +75,13 @@ static void keyboard_callback(registers_t *regs) {
             execute_command(key_buffer);
             key_buffer[0] = '\0';
             set_input_pos(0);
-        }else {
-            char letter = sc_ascii[(int) scancode];
-            set_letter_at_pos(key_buffer, INPUT_POS, letter);
-            char str[2] = {letter, '\0'};
+        } else {
+            char* str;
+            append_key_to_buffer(scancode, 
+                         key_buffer, 
+                        str, 
+                        INPUT_POS, 
+                        set_input_pos);
             print_string(str);
         }
     }else{
@@ -86,16 +102,23 @@ void init_keyboard() {
 char get_key() {
     // 从键盘端口读取扫描码
     uint8_t scancode = port_byte_in(0x60);
-
     // 转换扫描码为 ASCII 字符
     char letter = sc_ascii[(int) scancode];
-
     // 返回对应的字符
     return letter;
 }
 
+//工具函数: 将扫描码输入一个buffer中, 并返回char供其他使用
+void append_key_to_buffer(uint16_t scancode, char* buffer, char* return_char, int input_pos, void (*input_pos_inc_func)(int)){
+    char letter = sc_ascii[(int) scancode];
+    set_letter_at_pos(buffer, input_pos, letter, input_pos_inc_func);
+    char str[2] = {letter, '\0'};
+    string_copy(return_char, str);
+}
+
 // 设置字符串中某个位置的字符，若位置超过总长度-1, 则失败; 若为总长度-1, 则添加; 其他情况修改对应位置
-void set_letter_at_pos(char* buffer, int pos, char letter) {
+// 对应的增加input_pos的函数需要自行通过函数指针传入
+void set_letter_at_pos(char* buffer, int pos, char letter, void (*input_pos_inc_func)(int)) {
     int string_length_full = string_length(buffer);
     if (pos == string_length_full) {
         // 如果位置正好是字符串末尾，添加字符
@@ -107,16 +130,25 @@ void set_letter_at_pos(char* buffer, int pos, char letter) {
         // 其他情况下，修改对应位置的字符
         buffer[pos] = letter;
     }
-    
-    set_input_pos(INPUT_POS + 1);
+    input_pos_inc_func(pos + 1);
 }
 
 bool at_buffer_end(char* buffer){
     return INPUT_POS >= string_length(buffer) - 1;
 }
 
-
-// 在移动光标位置后，相应移动输入位置
+// 用于移动key_buffer的input_pos
 void set_input_pos(int pos) {
     INPUT_POS = pos;
+}
+
+// 用于移动keychain_buffer的input_pos
+void set_chain_input_pos(int pos){
+    CHAIN_INPUT_POS = pos;
+}
+
+//从keychain_buffer中读取最后一个输入的键("\0"前一个)
+char get_next_char_from_keychain_buffer(){
+    int length = string_length(keychain_buffer);
+    return keychain_buffer[length - 1];
 }

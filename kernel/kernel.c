@@ -13,6 +13,13 @@
 
 volatile bool should_start_game = false;
 
+void print_cmd(){
+    
+    clear_screen();
+    print_string("Super-OS File System\n");
+    print_string("> ");
+}
+
 void start_kernel() {
     clear_screen();
     print_string("Super-OS initialized.\n");
@@ -40,9 +47,7 @@ void start_kernel() {
     init_timer(TIMER_FREQ);
 
     // 打印欢迎信息
-    clear_screen();
-    print_string("Super-OS File System\n");
-    print_string("> ");
+    print_cmd();
 
     //添加内核主循环
     while(1) {
@@ -51,6 +56,7 @@ void start_kernel() {
             // 确保中断是启用的
             __asm__ volatile("sti");
             game_loop();
+            print_string("\n> ");
         }
         __asm__ volatile("hlt");
     }
@@ -153,7 +159,6 @@ void execute_command(char *input) {
         } else {
             print_string("Failed to create file.\n");
         }
-        print_string("\n> ");
     } else if (compare_string(input, "WRITE") == 0) {
         // 写入文件
         print_string("Enter file name: ");
@@ -209,6 +214,6 @@ void execute_command(char *input) {
     } else {
         print_string("Unknown command: ");
         print_string(input);
-        print_string("\n> ");
     }
+    print_string("\n> ");
 }

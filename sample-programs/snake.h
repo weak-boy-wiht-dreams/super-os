@@ -66,6 +66,9 @@ void pause_game(Game* game);         // 暂停游戏
 void resume_game(Game* game);        // 继续游戏
 void exit_game(Game* game);          // 退出游戏
 
+// 工具函数
+Direction get_input();  //获取输入
+
 // 游戏主循环
 void game_loop();                    // 游戏主循环
 
