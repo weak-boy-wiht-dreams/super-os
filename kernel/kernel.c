@@ -83,23 +83,25 @@ void execute_command(char *input) {
     } else if (compare_string_forward(input, "CREATE") == 0) {
         // 创建文件
          //other_mode =true;
-         char *output[10];
-         split_input(input,output);
-         for(int i=0;i<10;i++){
-            print_string(output[i]);
+         char result[MAX_TOKENS][MAX_TOKEN_LENGTH];
+         int count = split_string(input, result);
+         //char *output[10];
+         //split_input(input,output);
+         for(int i=0;i<count;i++){
+            print_string(result[i]);
 
          }
-        print_string("Enter file name: ");
+       // print_string("Enter file name: ");
        // key_buffer[0] = '/0';
        // execute_command(input);
         char filename[32];
-        //string_copy(filename, "testfile"); // 模拟用户输入文件名
+        string_copy(filename,result[1] ); // 模拟用户输入文件名
         print_nl();
 
         print_string("Enter file size in bytes: (testfile)");
         print_nl();
         char size_str[16];
-        //string_copy(size_str, "128"); // 模拟用户输入文件大小
+        string_copy(size_str, result[2]); // 模拟用户输入文件大小
         uint32_t size = string_to_int(size_str);
 
         if (create_file(filename, size) == 0) {

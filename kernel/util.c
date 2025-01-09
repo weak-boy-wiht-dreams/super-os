@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include"../drivers/keyboard.h"
 #include"../drivers/display.h"
+#include "util.h"
+
 //辅助内核编写的功能函数，一个函数，一个功能
 void memory_copy(uint8_t *source, uint8_t *dest, uint32_t nbytes) {
     int i;
@@ -180,4 +182,34 @@ void print_hex(uint32_t value) {
 
     // 打印生成的十六进制字符串
     print_string(hex_str);
+}
+
+int split_string(const char *input, char result[MAX_TOKENS][MAX_TOKEN_LENGTH]) {
+    int token_count = 0;  // 当前分割出的子字符串数量
+    int token_length = 0; // 当前子字符串的长度
+    int i = 0;            // 输入字符串的索引
+
+    while (input[i] != '\0') { // 遍历整个字符串
+        if (input[i] == ' ') { // 遇到空格，完成一个子字符串
+            if (token_length > 0) { // 如果当前子字符串不为空
+                result[token_count][token_length] = '\0'; // 添加字符串结束符
+                token_count++; // 子字符串数量加一
+                token_length = 0; // 重置当前子字符串长度
+            }
+        } else { // 非空格字符，添加到当前子字符串
+            if (token_length < MAX_TOKEN_LENGTH - 1) { // 确保不会超出长度限制
+                result[token_count][token_length] = input[i];
+                token_length++;
+            }
+        }
+        i++;
+    }
+
+    // 如果最后还有未结束的子字符串
+    if (token_length > 0) {
+        result[token_count][token_length] = '\0'; // 添加结束符
+        token_count++;
+    }
+
+    return token_count; // 返回子字符串的数量
 }

@@ -129,11 +129,9 @@ bool at_buffer_end(char* buffer){
 void set_input_pos(int pos) {
     INPUT_POS = pos;
 }
-
+/*
 char get_user_input(){
-
-
-
 
     
 }
+*/
