@@ -3,6 +3,7 @@
 #define SNAKE_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #define GAME_WIDTH 40
 #define GAME_HEIGHT 20
@@ -70,6 +71,6 @@ void exit_game(Game* game);          // 退出游戏
 Direction get_input();  //获取输入
 
 // 游戏主循环
-void game_loop();                    // 游戏主循环
+void game_loop(uint8_t game_difficulty);                    // 游戏主循环
 
 #endif

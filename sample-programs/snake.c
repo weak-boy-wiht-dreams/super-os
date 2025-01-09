@@ -198,10 +198,12 @@ Direction get_input(){
     }
 }
 
-void game_loop() {
+void game_loop(uint8_t game_difficulty) {
     Game game = init_game();
 
     flush(&game);
+
+    uint8_t delay_milliseconds = game_difficulty * 100;
     
     while (game.state != GAME_OVER) {
         flush(&game);
@@ -214,7 +216,7 @@ void game_loop() {
                 break;
             }
             move_snake(&game, input);
-            delay(100);
+            delay(delay_milliseconds);
         }
     }
     
